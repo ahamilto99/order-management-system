@@ -8,7 +8,7 @@ spring:
       
   flyway:
     url: jdbc:postgresql://localhost:5432/order_management_system
-    user: postgres
+    user: admin
     password: 2yH8NB1A8i1w
 
   datasource:    url: jdbc:postgresql://localhost:5432/order_management_system    username: app_user

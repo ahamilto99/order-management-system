@@ -62,9 +62,9 @@ CREATE TABLE IF NOT EXISTS order_lines (
 CREATE TABLE IF NOT EXISTS products_audit (
 	id BIGINT NOT NULL PRIMARY KEY,
 	product_id BIGINT NOT NULL,
-	name VARCHAR(100) NOT NULL,
-	mrsp MONEY NOT NULL,
-	inventory_count INTEGER NOT NULL,
+	--adding or removing cols in products won't affect this table nor the audit trigger
+	old_row JSONB,
+	new_row JSONB,
 	inventory_change INTEGER NOT NULL,
 	revision_type CHAR(3),
 	revision_timestamp TIMESTAMP
