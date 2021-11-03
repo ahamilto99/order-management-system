@@ -2,10 +2,13 @@ package com.hamilton.alexander.oms.address;
 
 import java.io.Serializable;
 
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +19,9 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Range;
 
 @Entity
+@MappedSuperclass
 @Table(name = "addresses")
+@DiscriminatorColumn(name = "address_type", columnDefinition = "CHAR(1)" , discriminatorType = DiscriminatorType.CHAR)
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 8544167295614544103L;
