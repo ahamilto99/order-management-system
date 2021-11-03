@@ -2,14 +2,18 @@ spring:
   jpa:
     hibernate:      ddl-auto: validate
     properties:      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect    open-in-view: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 30
+          batch_versioned_data: true
+          time_zone: UTC    open-in-view: false
 
   sql:    init:      mode: never
       
   flyway:
     url: jdbc:postgresql://localhost:5432/order_management_system
-    user: admin
+    user: postgres
     password: 2yH8NB1A8i1w
 
   datasource:    url: jdbc:postgresql://localhost:5432/order_management_system    username: app_user
-    password: etVZi41Bipds    
+    password: etVZi41Bipds

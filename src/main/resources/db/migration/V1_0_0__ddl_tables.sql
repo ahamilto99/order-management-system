@@ -35,10 +35,10 @@ CREATE TABLE IF NOT EXISTS orders (
 	id UUID NOT NULL PRIMARY KEY,
 	order_timestamp TIMESTAMP,
 	notes VARCHAR(255),
-	subtotal MONEY NOT NULL,
-	discount DECIMAL(2,2) CHECK(discount > 0 AND discount < 1),
-	tax MONEY NOT NULL,
-	total MONEY NOT NULL,
+	subtotal NUMERIC(11,2) NOT NULL,
+	discount NUMERIC(2,2) CHECK(discount > 0 AND discount < 1),
+	tax NUMERIC(11,2) NOT NULL,
+	total NUMERIC(11,2) NOT NULL,
 	customer_id UUID NOT NULL REFERENCES customers(id)
 );
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS products (
 	id BIGINT NOT NULL PRIMARY KEY,
 	name VARCHAR(100) NOT NULL,
 	description VARCHAR(255) NOT NULL,
-	mrsp MONEY NOT NULL,
+	msrp NUMERIC(11,2) NOT NULL,
 	inventory_count INTEGER NOT NULL
 );
 
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS order_lines (
 	order_id UUID NOT NULL REFERENCES orders(id),
 	line_number SMALLINT NOT NULL,
 	quantity INTEGER NOT NULL,
-	mrsp MONEY NOT NULL,
+	msrp NUMERIC(11,2) NOT NULL,
 	product_id BIGINT NOT NULL REFERENCES products(id),
 	PRIMARY KEY (order_id, line_number)
 );
@@ -62,10 +62,10 @@ CREATE TABLE IF NOT EXISTS order_lines (
 CREATE TABLE IF NOT EXISTS products_audit (
 	id BIGINT NOT NULL PRIMARY KEY,
 	product_id BIGINT NOT NULL,
-	--adding or removing cols in products won't affect this table nor the audit trigger
+	--adding or removing cols in products won't affect this table nor the audit trigger b/c of JSONB type
 	old_row JSONB,
 	new_row JSONB,
 	inventory_change INTEGER NOT NULL,
-	revision_type CHAR(3),
+	revision_type VARCHAR(3),
 	revision_timestamp TIMESTAMP
 );

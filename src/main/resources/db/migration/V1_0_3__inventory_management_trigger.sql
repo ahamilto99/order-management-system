@@ -3,12 +3,12 @@ RETURNS TRIGGER
 AS $body$
 DECLARE
 	stock INTEGER;
-	price MONEY;
+	price NUMERIC(11,2);
 BEGIN
 	CASE
 		WHEN TG_OP = 'INSERT' THEN
 			stock := (SELECT inventory_count FROM products WHERE id = NEW.product_id);
-			price := (SELECT mrsp FROM products WHERE id = NEW.product_id);
+			price := (SELECT msrp FROM products WHERE id = NEW.product_id);
 			
 			IF (stock < NEW.quantity) THEN
 				RAISE EXCEPTION 'Not enough product in stock';
@@ -19,7 +19,7 @@ BEGIN
 			WHERE id = NEW.product_id;
 		WHEN TG_OP = 'UPDATE' THEN
 			stock := (SELECT inventory_count FROM products WHERE id = OLD.product_id);
-			price := (SELECT mrsp FROM products WHERE id = OLD.product_id);
+			price := (SELECT msrp FROM products WHERE id = OLD.product_id);
 			
 			IF (stock < NEW.quantity - OLD.quantity) THEN
 				RAISE EXCEPTION 'Not enough product in stock';

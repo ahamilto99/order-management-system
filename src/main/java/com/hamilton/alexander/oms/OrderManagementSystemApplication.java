@@ -1,4 +1,4 @@
-package com.alexander.hamilton.oms;
+package com.hamilton.alexander.oms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
