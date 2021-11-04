@@ -1,0 +1,8 @@
+spring:
+  flyway:
+    url: jdbc:tc:postgresql:13.4:////order_management_system
+    user: postgres
+    password: etVZi41Bipds  datasource:
+    url: jdbc:tc:postgresql:13.4:////order_management_system
+    username: app_user
+    password: s3cret

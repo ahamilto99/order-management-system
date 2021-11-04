@@ -13,5 +13,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON products TO app_user;
 GRANT SELECT, INSERT on products_audit TO app_user;
 
 GRANT USAGE ON seq_employees_id TO app_user;
+GRANT USAGE ON seq_addresses_id TO app_user;
 GRANT USAGE ON seq_products_id TO app_user;
 GRANT USAGE ON seq_products_audit_id TO app_user;

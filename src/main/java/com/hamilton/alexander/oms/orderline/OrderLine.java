@@ -26,20 +26,20 @@ public class OrderLine implements Serializable {
     @EmbeddedId
     private OrderLineId id;
     
-    @NotNull(message = "Order ID is required")
+    @NotNull(message = "The order id field is required")
     @MapsId("orderId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @NotNull(message = "Quantity is required")
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "Quantity must be between 0 and " + Integer.MAX_VALUE)
+    @NotNull(message = "The quantity field is required")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "The quantity field must be between 0 and " + Integer.MAX_VALUE)
     private Integer quantity;
 
-    @NotNull(message = "MSRP is required")
+    @NotNull(message = "The msrp field is required")
     private BigDecimal msrp;
 
-    @NotNull(message = "Product is required")
+    @NotNull(message = "The product field is required")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

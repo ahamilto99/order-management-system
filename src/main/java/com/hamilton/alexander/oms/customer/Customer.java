@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.hamilton.alexander.oms.address.Address;
 import com.hamilton.alexander.oms.employee.Employee;
 import com.hamilton.alexander.oms.order.Order;
 
@@ -44,52 +46,74 @@ public class Customer implements Serializable {
                     value = "com.vladmihalcea.book.hpjp.hibernate.identifier.uuid.PostgreSQLUUIDGenerationStrategy")) // @formatter:on
     private UUID id;
 
-    @NotBlank(message = "First name is required")
-    @Size(max = 30, message = "First name cannot be more than 30 characters")
+    @NotBlank(message = "The first name field is required")
+    @Size(max = 30, message = "The first name cannot be more than 30 characters")
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
-    @Size(max = 50, message = "Last name cannot be more than 50 characters")
+    @NotBlank(message = "The last name field is required")
+    @Size(max = 50, message = "The last name cannot be more than 50 characters")
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Size(max = 150, message = "Email cannot be more than 150 characters")
+    @NotBlank(message = "The email field is required")
+    @Size(max = 150, message = "The email cannot be more than 150 characters")
     @Email
     private String email;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "Phone number must be in the following format: ###-###-####")
+    @NotBlank(message = "The phone number field is required")
+    @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "The phone number filed must be in the following format: ###-###-####")
     private String phone;
 
-    @NotNull(message = "Employee is required")
+    @NotNull(message = "The employee field is required")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
-    
+
     @OneToMany(mappedBy = "customer")
     private List<Order> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
+
     @Version
     private short version;
-    
+
     public Customer() {
     }
-    
+
     public void addOrder(Order order) {
         order.setCustomer(this);
         orders.add(order);
     }
-    
+
     public void removeOrder(Order order) {
         order.setCustomer(null);
         orders.remove(order);
     }
-    
+
     public void removeAllOrders() {
         Iterator<Order> iter = orders.iterator();
         while (iter.hasNext()) {
             Order order = iter.next();
             order.setCustomer(null);
+            iter.remove();
+        }
+    }
+
+    public void addAddress(Address address) {
+        address.setCustomer(this);
+        addresses.remove(address);
+    }
+
+    public void removeAddress(Address address) {
+        address.setCustomer(null);
+        addresses.remove(address);
+    }
+
+    public void removeAllAddresses() {
+        Iterator<Address> iter = addresses.iterator();
+        while (iter.hasNext()) {
+            Address address = iter.next();
+            address.setCustomer(null);
             iter.remove();
         }
     }
@@ -150,6 +174,14 @@ public class Customer implements Serializable {
         this.orders = orders;
     }
 
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
+    }
+
     @Override
     public int hashCode() {
         return 2021;
@@ -182,5 +214,5 @@ public class Customer implements Serializable {
         builder.append("]");
         return builder.toString();
     }
-    
+
 }

@@ -19,16 +19,16 @@ CREATE TABLE IF NOT EXISTS customers (
 );
 
 CREATE TABLE IF NOT EXISTS addresses (
-	customer_id UUID NOT NULL REFERENCES customers(id),
-	address_type CHAR(1) NOT NULL,
-	shipping_billing_same BOOLEAN NOT NULL,
+	id BIGINT NOT NULL PRIMARY KEY,
+	address_type VARCHAR(1) NOT NULL,
+	is_also_shipping BOOLEAN NOT NULL,
 	street_address VARCHAR(150) NOT NULL,
 	po_box INTEGER,
 	city VARCHAR(50) NOT NULL,
 	province VARCHAR(25) NOT NULL,
 	postal_code VARCHAR(7) NOT NULL,
 	version SMALLINT NOT NULL,
-	PRIMARY KEY (customer_id, address_type)
+	customer_id UUID NOT NULL REFERENCES customers(id)
 );
 
 CREATE TABLE IF NOT EXISTS orders (

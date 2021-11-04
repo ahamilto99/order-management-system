@@ -31,20 +31,20 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_PRODUCTS_ID)
     private Long id;
 
-    @NotBlank(message = "Name is required")
-    @Size(max = 100, message = "Name cannot have more than 100 characters")
+    @NotBlank(message = "The name field is required")
+    @Size(max = 100, message = "The name field cannot have more than 100 characters")
     private String name;
 
-    @NotBlank(message = "Description is required")
-    @Size(max = 255, message = "Description cannot have more than 255 characters")
+    @NotBlank(message = "The description field is required")
+    @Size(max = 255, message = "The description field cannot have more than 255 characters")
     private String description;
 
-    @NotNull(message = "MSRP is required")
-    @Positive(message = "MSRP must be positive")
+    @NotNull(message = "The msrp field is required")
+    @Positive(message = "The msrp field must be positive")
     private BigDecimal msrp;
 
-    @NotNull(message = "Inventory count is requried")
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "Inventory count cannot be negative")
+    @NotNull(message = "The inventory count field is requried")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "The inventory count field must be between 0 and " + Integer.MAX_VALUE)
     private Integer inventoryCount;
 
     @OneToMany(mappedBy = "product")

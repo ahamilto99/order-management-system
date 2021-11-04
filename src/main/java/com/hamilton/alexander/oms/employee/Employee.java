@@ -33,25 +33,25 @@ public class Employee implements Serializable {
     @SequenceGenerator(name = SEQ_EMPLOYEES_ID, sequenceName = SEQ_EMPLOYEES_ID, initialValue = 1, allocationSize = 1)
     private Long id;
 
-    @NotBlank(message = "Username is required")
-    @Size(max = 10, message = "Username cannot be more than 10 characters")
+    @NotBlank(message = "The username field is required")
+    @Size(max = 10, message = "The Username cannot be more than 10 characters")
     private String username;
 
-    @NotBlank(message = "First name is required")
-    @Size(max = 30, message = "First name cannot be more than 30 characters")
+    @NotBlank(message = "The first name field is required")
+    @Size(max = 30, message = "The first name field cannot be more than 30 characters")
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
-    @Size(max = 50, message = "Last name cannot be more than 50 characters")
+    @NotBlank(message = "The last name field is required")
+    @Size(max = 50, message = "The last name field cannot be more than 50 characters")
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Size(max = 150, message = "Email cannot be more than 150 characters")
+    @NotBlank(message = "The email field is required")
+    @Size(max = 150, message = "The email field cannot be more than 150 characters")
     @Email
     private String email;
 
-    @NotBlank(message = "Phone number is required")
-    @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "Phone number must be in the following format: ###-###-####")
+    @NotBlank(message = "The phone number field is required")
+    @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "The phone number field must be in the following format: ###-###-####")
     private String phone;
     
     @OneToMany(mappedBy = "employee")

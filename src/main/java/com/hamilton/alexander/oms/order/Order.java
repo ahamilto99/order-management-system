@@ -35,34 +35,34 @@ public class Order implements Serializable {
     @Id
     private UUID id;
 
-    @NotNull(message = "Order timestamp is required")
+    @NotNull(message = "The order timestamp field is required")
     private LocalDateTime orderTimestamp;
 
     @Size(max = 255)
     private String notes;
 
-    @NotNull(message = "Subtotal is required")
-    @Positive(message = "Subtotal must be positive")
+    @NotNull(message = "The subtotal field is required")
+    @Positive(message = "The subtotal field must be positive")
     private BigDecimal subtotal;
 
-    @PositiveOrZero(message = "Discount cannot be negative")
-    @DecimalMax(value = "1.00", message = "Discount cannot be greater than 1")
+    @PositiveOrZero(message = "The discount field cannot be negative")
+    @DecimalMax(value = "1.00", message = "The discount field cannot be greater than 1")
     private BigDecimal discount;
 
-    @NotNull(message = "Tax is required")
-    @PositiveOrZero(message = "Tax cannot be negative")
+    @NotNull(message = "The tax field is required")
+    @PositiveOrZero(message = "The tax field cannot be negative")
     private BigDecimal tax;
 
-    @NotNull(message = "Total is required")
-    @Positive(message = "Total must be positive")
+    @NotNull(message = "The total field is required")
+    @Positive(message = "The total must be positive")
     private BigDecimal total;
 
-    @NotNull(message = "Customer is required")
+    @NotNull(message = "The customer field is required")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @NotEmpty(message = "Order must have at least one order line")
+    @NotEmpty(message = "The order must have at least one order line")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     private List<OrderLine> orderLines = new ArrayList<>();
 
