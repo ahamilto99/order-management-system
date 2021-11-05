@@ -1,4 +1,6 @@
-spring:
+server:
+  port: 8080
+  servlet:    context-path: /oms/api
   jpa:
     hibernate:      ddl-auto: validate
     properties:      hibernate:
