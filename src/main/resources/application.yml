@@ -1,14 +1,23 @@
 server:
   port: 8080
   servlet:    context-path: /oms/api
+spring:
   jpa:
     hibernate:      ddl-auto: validate
     properties:      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        connection:
+          "[provider_disables_autocommit]": true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
         jdbc:
-          batch_size: 30
-          batch_versioned_data: true
-          time_zone: UTC    open-in-view: false
+          "[batch_size]": 30
+          "[batch_versioned_data]": true
+          "[time_zone]": UTC
+        "[order_inserts]": true
+        "[order_updates]": true
+        query:
+          "[in_clause_parameter_padding]": true
+          "[fail_on_pagination_over_collection_fetch]": true
+          "[plan_cache_max_size]": 256    open-in-view: false
 
   sql:    init:      mode: never
       
@@ -18,4 +27,5 @@ server:
     password: 2yH8NB1A8i1w
 
   datasource:    url: jdbc:postgresql://localhost:5432/order_management_system    username: app_user
-    password: etVZi41Bipds
+    password: etVZi41Bipds    hikari:      auto-commit: false
+    

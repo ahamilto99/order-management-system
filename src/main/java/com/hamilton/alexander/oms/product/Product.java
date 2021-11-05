@@ -1,14 +1,11 @@
 package com.hamilton.alexander.oms.product;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -17,8 +14,6 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
-
-import com.hamilton.alexander.oms.orderline.OrderLine;
 
 @Entity
 @Table(name = "products")
@@ -46,9 +41,6 @@ public class Product {
     @NotNull(message = "The inventory count field is requried")
     @Range(min = 0, max = Integer.MAX_VALUE, message = "The inventory count field must be between 0 and " + Integer.MAX_VALUE)
     private Integer inventoryCount;
-
-    @OneToMany(mappedBy = "product")
-    private List<OrderLine> orderLines = new ArrayList<>();
 
     public Product() {
     }
@@ -91,14 +83,6 @@ public class Product {
 
     public void setInventoryCount(Integer inventoryCount) {
         this.inventoryCount = inventoryCount;
-    }
-
-    public List<OrderLine> getOrderLines() {
-        return orderLines;
-    }
-
-    public void setOrderLines(List<OrderLine> orderLines) {
-        this.orderLines = orderLines;
     }
 
     @Override

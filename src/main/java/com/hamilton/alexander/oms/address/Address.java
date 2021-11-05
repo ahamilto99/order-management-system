@@ -2,9 +2,11 @@ package com.hamilton.alexander.oms.address;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,7 +30,8 @@ import com.hamilton.alexander.oms.customer.Customer;
 @Entity
 @Table(name = "addresses")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "address_type", length = 1)
+@DiscriminatorColumn(name = "address_type", discriminatorType = DiscriminatorType.CHAR, columnDefinition = "CHAR(1)")
+@DiscriminatorValue(" ")
 public class Address implements Serializable {
 
     private static final long serialVersionUID = 8544167295614544103L;
@@ -51,8 +54,9 @@ public class Address implements Serializable {
     @Size(max = 50, message = "The city cannot be more than 50 characters")
     private String city;
 
-    @NotNull(message = "The province field is required")
-    @Enumerated(EnumType.STRING)
+    @NotBlank(message = "The province field is required")
+    @Enumerated
+    @Column(columnDefinition = "SMALLINT")
     private Province province;
 
     @NotBlank(message = "The postal code field is required")

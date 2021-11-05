@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS customers (
 
 CREATE TABLE IF NOT EXISTS addresses (
 	id BIGINT NOT NULL PRIMARY KEY,
-	address_type VARCHAR(1) NOT NULL,
+	address_type CHAR(1) NOT NULL,
 	is_also_shipping BOOLEAN NOT NULL,
 	street_address VARCHAR(150) NOT NULL,
 	po_box INTEGER,
 	city VARCHAR(50) NOT NULL,
-	province VARCHAR(25) NOT NULL,
+	province INTEGER NOT NULL,
 	postal_code VARCHAR(7) NOT NULL,
 	version SMALLINT NOT NULL,
 	customer_id UUID NOT NULL REFERENCES customers(id)

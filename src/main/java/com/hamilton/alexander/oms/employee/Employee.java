@@ -1,14 +1,11 @@
 package com.hamilton.alexander.oms.employee;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -17,8 +14,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Version;
-
-import com.hamilton.alexander.oms.customer.Customer;
 
 @Entity
 @Table(name = "employees")
@@ -54,18 +49,10 @@ public class Employee implements Serializable {
     @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "The phone number field must be in the following format: ###-###-####")
     private String phone;
     
-    @OneToMany(mappedBy = "employee")
-    private List<Customer> customers = new ArrayList<>();
-
     @Version
     private short version;
 
     public Employee() {
-    }
-    
-    public void addCustomer(Customer customer) {
-        customer.setEmployee(this);
-        customers.add(customer);
     }
     
     public Long getId() {
@@ -114,14 +101,6 @@ public class Employee implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public List<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
     }
 
     @Override
