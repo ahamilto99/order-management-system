@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /oms/api
+    context-path: /oms/api/v1
 
 spring:
   jpa:

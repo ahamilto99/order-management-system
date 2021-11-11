@@ -11,7 +11,7 @@ import io.hypersistence.optimizer.core.config.JpaConfig;
 // TODO: REMOVE THIS CLASS WHEN V1 IS COMPLETE
 // TODO: REMOVE HYPERSISTENCE DEPENDENCY WHEN V1 IS COMPLETE
 @Configuration
-public class HypersistenceConfiguration {
+public class HypersistenceConfig {
 
     @Bean
     public HypersistenceOptimizer hypersistenceOptimizer(EntityManagerFactory emf) {
