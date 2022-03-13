@@ -5,7 +5,7 @@ BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		INSERT INTO products_audit
 		VALUES (
-			nextval('seq_products_audit_id'),
+			nextval('seq_product_audit_id'),
 			NEW.id,
 			NULL,
 			to_jsonb(NEW),
@@ -18,11 +18,11 @@ BEGIN
 	ELSIF (TG_OP = 'UPDATE') THEN
 		INSERT INTO products_audit
 		VALUES (
-			nextval('seq_products_audit_id'),
+			nextval('seq_product_audit_id'),
 			NEW.id,
 			to_jsonb(OLD),
 			to_jsonb(NEW),
-			NEW.inventory_count - OLD.inventory_count
+			NEW.inventory_count - OLD.inventory_count,
 			'MOD',
 			CURRENT_TIMESTAMP
 		);	
@@ -31,7 +31,7 @@ BEGIN
 	ELSIF (TG_OP = 'DELETE') THEN
 		INSERT INTO products_audit
 		VALUES (
-			nextval('seq_products_audit_id'),
+			nextval('seq_product_audit_id'),
 			OLD.id,
 			to_jsonb(OLD),
 			NULL,
