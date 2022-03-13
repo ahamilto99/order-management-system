@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.5</version>
+		<version>2.6.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.alexander.hamilton</groupId>
@@ -14,10 +14,16 @@
 	<version>1.0.0</version>
 	<name>order-management-system</name>
 	<description>A customer order management system that tracks inventory and associates&apos; sales.</description>
+
 	<properties>
 		<java.version>17</java.version>
 		<testcontainers.version>1.16.0</testcontainers.version>
+		<hypersistence-optimizer.version>2.5.1</hypersistence-optimizer.version>
+		<datasource-proxy.version>1.7</datasource-proxy.version>
+		<hibernate-types-52.version>2.14.0</hibernate-types-52.version>
+		<testcontainers-keycloak.version>1.8.1</testcontainers-keycloak.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,18 +57,35 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-		    <groupId>io.hypersistence</groupId>
-		    <artifactId>hypersistence-optimizer</artifactId>
-		    <version>2.4.2</version>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-optimizer</artifactId>
+			<version>${hypersistence-optimizer.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.ttddyy</groupId>
+			<artifactId>datasource-proxy</artifactId>
+			<version>${datasource-proxy.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vladmihalcea</groupId>
 			<artifactId>hibernate-types-52</artifactId>
-			<version>2.14.0</version>
+			<version>${hibernate-types-52.version}</version>
 		</dependency>
+
+		<!-- Testing Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -71,8 +94,34 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.dasniko</groupId>
+			<artifactId>testcontainers-keycloak</artifactId>
+			<version>${testcontainers-keycloak.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -103,6 +152,11 @@
 					<password>2yH8NB1A8i1w</password>
 				</configuration>
 			</plugin>
+			<!-- <plugin> <artifactId>maven-resources-plugin</artifactId> <executions> 
+				<execution> <id>copy-resources</id> <phase>package</phase> <goals> <goal>copy-resources</goal> 
+				</goals> <configuration> <outputDirectory>${project.build.outputDirectory}/static/docs</outputDirectory> 
+				<resources> <resource> <directory>${project.build.directory}/generated-docs</directory> 
+				</resource> </resources> </configuration> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 
