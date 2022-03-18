@@ -1,13 +1,14 @@
 package com.hamilton.alexander.oms.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -17,42 +18,39 @@ import org.hibernate.validator.constraints.Range;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Serializable {
 
-    private static final String SEQ_PRODUCTS_ID = "seq_products_id";
+    private static final long serialVersionUID = 6344494816766069587L;
 
     @Id
-    @SequenceGenerator(name = SEQ_PRODUCTS_ID, sequenceName = SEQ_PRODUCTS_ID, initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_PRODUCTS_ID)
-    private Long id;
+    // db generates the ID
+    @Column(columnDefinition = "UUID", nullable = false)
+    private UUID id;
 
-    @NotBlank(message = "The name field is required")
-    @Size(max = 100, message = "The name field cannot have more than 100 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 100, message = "{validation.size}")
     private String name;
 
-    @NotBlank(message = "The description field is required")
-    @Size(max = 255, message = "The description field cannot have more than 255 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 255, message = "{validation.size}")
     private String description;
 
-    @NotNull(message = "The msrp field is required")
-    @Positive(message = "The msrp field must be positive")
+    @NotNull(message = "{validation.required}")
+    @Positive(message = "{validation.positiveNumber}")
+    @DecimalMax(value = "999,999,999.99", message = "{validation.decimalMax}")
     private BigDecimal msrp;
 
-    @NotNull(message = "The inventory count field is requried")
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "The inventory count field must be between 0 and " + Integer.MAX_VALUE)
+    @NotNull(message = "{validation.required}")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "{validation.range}")
     private Integer inventoryCount;
 
     public Product() {
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    
     public String getName() {
         return name;
     }

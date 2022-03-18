@@ -17,40 +17,41 @@ import org.hibernate.validator.constraints.Range;
 import com.hamilton.alexander.oms.order.Order;
 import com.hamilton.alexander.oms.product.Product;
 
+/*
+ * TODO: WHEN CREATING THE SERVICE LAYER FOR OrderLine, REMEMBER THE DB HAS STORED PROCS FOR ALL WRITES
+ */
+
 @Entity
 @Table(name = "order_lines")
 public class OrderLine implements Serializable {
 
-    private static final long serialVersionUID = 5099802592880092434L;
+    private static final long serialVersionUID = -2474675650110035734L;
 
     @EmbeddedId
     private OrderLineId id;
     
-    @NotNull(message = "The order id field is required")
+    @NotNull(message = "{validation.required}")
     @MapsId("orderId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    @NotNull(message = "The quantity field is required")
-    @Range(min = 0, max = Integer.MAX_VALUE, message = "The quantity field must be between 0 and " + Integer.MAX_VALUE)
+    @NotNull(message = "{validation.required}")
+    @Range(min = 0, max = Integer.MAX_VALUE, message = "{validation.range}")
     private Integer quantity;
 
-    @NotNull(message = "The msrp field is required")
+    @NotNull(message = "{validation.required}")
     private BigDecimal msrp;
 
-    @NotNull(message = "The product field is required")
+    @NotNull(message = "{validation.required}")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public OrderLine() {
-    }
-
     public OrderLineId getId() {
         return id;
     }
-
+    
     public void setId(OrderLineId id) {
         this.id = id;
     }
@@ -89,18 +90,16 @@ public class OrderLine implements Serializable {
 
     @Override
     public int hashCode() {
-        return 2021;
+        return getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-
-        return id != null && id.equals(((OrderLine) obj).id);
+        return (obj instanceof OrderLine ol) ? (id != null && id.equals(ol.id)) : false;
     }
 
     @Override

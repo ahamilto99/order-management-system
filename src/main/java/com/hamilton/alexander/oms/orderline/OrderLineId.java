@@ -2,7 +2,6 @@ package com.hamilton.alexander.oms.orderline;
 
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -13,20 +12,21 @@ public class OrderLineId implements Serializable {
     private static final long serialVersionUID = -8466155043886149672L;
 
     @Column(name = "order_id")
-    private UUID orderId;
+    private Long orderId;
     
+    // db uses STORED PROCs to perform all writes to this field
     @Column(name = "line_number")
     private Short lineNumber;
     
     public OrderLineId() {
     }
 
-    public OrderLineId(UUID orderId, Short lineNumber) {
+    public OrderLineId(Long orderId, Short lineNumber) {
         this.orderId = orderId;
         this.lineNumber = lineNumber;
     }
 
-    public UUID getOrder() {
+    public Long getOrder() {
         return orderId;
     }
 
@@ -44,14 +44,13 @@ public class OrderLineId implements Serializable {
         if (this == obj)
             return true;
         
-        if (obj == null || getClass() != obj.getClass())
+        // TODO: REWRITE THIS USING JAVA 16's TYPE PATTERN MATCHING
+        if (!(obj instanceof OrderLineId))
             return false;
         
-        OrderLineId other = (OrderLineId) obj;
-        if  (Objects.equals(orderId, other.orderId) || !Objects.equals(lineNumber, other.lineNumber))
-            return false;
-        
-        return true;
+        final OrderLineId other = (OrderLineId) obj;
+
+        return (Objects.equals(orderId, other.orderId) && Objects.equals(lineNumber, other.lineNumber));
     }
 
     @Override
