@@ -2,11 +2,10 @@ package com.hamilton.alexander.oms.address;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,10 +13,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,56 +29,47 @@ import com.hamilton.alexander.oms.customer.Customer;
 @Entity
 @Table(name = "addresses")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "address_type", discriminatorType = DiscriminatorType.CHAR, columnDefinition = "CHAR(1)")
-@DiscriminatorValue(" ")
+@DiscriminatorColumn(name = "address_type", length = 8, discriminatorType = DiscriminatorType.STRING)
 public class Address implements Serializable {
 
-    private static final long serialVersionUID = 8544167295614544103L;
+    private static final long serialVersionUID = -8862432326801491219L;
 
-    private static final String SEQ_ADDRESSES_ID = "seq_addresses_id";
+    private static final String ID_SEQ = "seq_address_id";
 
     @Id
-    @SequenceGenerator(name = SEQ_ADDRESSES_ID, sequenceName = SEQ_ADDRESSES_ID, initialValue = 1, allocationSize = 1)
-    @GeneratedValue(generator = SEQ_ADDRESSES_ID, strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     private Long id;
 
-    @NotBlank(message = "The street address field is required")
-    @Size(max = 150, message = "The street address cannot be more than 150 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 150, message = "{validation.size}")
     private String streetAddress;
 
-    @Range(min = 1, max = 99_999, message = "The po box must be between 1 and 99_999")
+    @Range(min = 1, max = 99_999, message = "{validation.range}")
     private Integer poBox;
 
-    @NotBlank(message = "The city field is required")
-    @Size(max = 50, message = "The city cannot be more than 50 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 50, message = "{validation.size}")
     private String city;
 
-    @NotBlank(message = "The province field is required")
-    @Enumerated
-    @Column(columnDefinition = "SMALLINT")
+    @NotBlank(message = "{validation.required}")
+    @Enumerated(EnumType.STRING)
     private Province province;
 
-    @NotBlank(message = "The postal code field is required")
-    @Size(min = 7, max = 7, message = "The postal code cannot be more than 7 characters (including the whitespace)")
-    @Pattern(regexp = "([A-Z]\\d[A-Z])\\s(\\d[A-Z]\\d)", message = "The postal code must be in the following format: A#A #A#")
+    @NotBlank(message = "{validation.required}")
+    @Pattern(regexp = "([A-Z]\\d[A-Z])\\s(\\d[A-Z]\\d)", message = "{validation.postalCode}")
     private String postalCode;
 
-    @NotNull(message = "The customer field is required")
+    @NotNull(message = "{validation.required}")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "customer_id")
     private Customer customer;
-
-    @Version
-    public short version;
 
     public Address() {
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getStreetAddress() {
@@ -132,18 +122,16 @@ public class Address implements Serializable {
 
     @Override
     public int hashCode() {
-        return 2021;
+        return getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-
-        return id != null && id.equals(((Address) obj).id);
+        return (obj instanceof Address a) ? (id != null && id.equals(a.id)) : false;
     }
 
     @Override

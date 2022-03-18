@@ -1,6 +1,7 @@
 package com.hamilton.alexander.oms.product.audit;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,19 +17,19 @@ import org.springframework.data.annotation.Immutable;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
 @Entity
-@Immutable
+@Immutable // no Serializable b/c all queries return DTO Projections
 @Table(name = "products_audit")
 @TypeDef(typeClass = JsonType.class, defaultForType = ProductRecord.class)
 public class ProductAudit {
 
-    private static final String SEQ_PRODUCTS_AUDIT_ID = "seq_products_audit_id";
+    private static final String SEQ_PRODUCTS_AUDIT_ID = "seq_product_audit_id";
 
     @Id
     @SequenceGenerator(name = SEQ_PRODUCTS_AUDIT_ID, sequenceName = SEQ_PRODUCTS_AUDIT_ID, initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_PRODUCTS_AUDIT_ID)
     private Long id;
 
-    private Long productId;
+    private UUID productId;
 
     @Column(name = "old_row", columnDefinition = "JSON")
     private ProductRecord oldProductRow;
@@ -49,7 +50,7 @@ public class ProductAudit {
         return id;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 

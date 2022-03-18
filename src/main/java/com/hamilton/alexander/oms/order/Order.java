@@ -6,76 +6,63 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 import com.hamilton.alexander.oms.customer.Customer;
 import com.hamilton.alexander.oms.orderline.OrderLine;
 
+/*
+ * TODO: WHEN CREATING SERVICE LAYER FOR Order, REMEMBER: THE DB HAS A STORED PROC FOR ALL DELETES
+ * TODO: ONLY CREATE ORDER OPTION USING JPQL
+ * TODO: BI-DIRECTIONAL WITH OrderLine HAS TO BE RE-THOUGHT B/C OF STORED PROCs
+ */
+
 @Entity
 @Table(name = "orders")
 public class Order implements Serializable {
+    
+    private static final long serialVersionUID = 8891027231064748161L;
 
-    private static final long serialVersionUID = -8176070068460078261L;
+    private static final String SEQ_ID = "seq_order_id";
 
     @Id
-    private UUID id;
+    @SequenceGenerator(name = SEQ_ID, sequenceName = SEQ_ID, initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ID)
+    private Long id;
 
-    @NotNull(message = "The order timestamp field is required")
+    @NotNull(message = "{validation.required}")
     private LocalDateTime orderTimestamp;
 
     @Size(max = 255)
     private String notes;
 
-    @NotNull(message = "The subtotal field is required")
-    @Positive(message = "The subtotal field must be positive")
-    private BigDecimal subtotal;
-
-    @PositiveOrZero(message = "The discount field cannot be negative")
-    @DecimalMax(value = "1.00", message = "The discount field cannot be greater than 1")
-    private BigDecimal discount;
-
-    @NotNull(message = "The tax field is required")
-    @PositiveOrZero(message = "The tax field cannot be negative")
-    private BigDecimal tax;
-
-    @NotNull(message = "The total field is required")
-    @Positive(message = "The total must be positive")
+    @NotNull(message = "{validation.required}")
+    @Positive(message = "{validation.positiveNumber}")
     private BigDecimal total;
 
-    @NotNull(message = "The customer field is required")
+    @NotNull(message = "{validation.required}")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @NotEmpty(message = "The order must have at least one order line")
+    @NotEmpty(message = "{validation.orderLineRequired}")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "order")
     private List<OrderLine> orderLines = new ArrayList<>();
-
-    public Order() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public void addOrderLine(OrderLine orderLine) {
         orderLine.setOrder(this);
@@ -96,6 +83,10 @@ public class Order implements Serializable {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+    
     public LocalDateTime getOrderTimestamp() {
         return orderTimestamp;
     }
@@ -110,30 +101,6 @@ public class Order implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(BigDecimal discount) {
-        this.discount = discount;
-    }
-
-    public BigDecimal getTax() {
-        return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
     }
 
     public BigDecimal getTotal() {
@@ -162,18 +129,16 @@ public class Order implements Serializable {
 
     @Override
     public int hashCode() {
-        return 2021;
+        return getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-
-        return id != null && id.equals(((Order) obj).id);
+        return (obj instanceof Order o) ? (id != null && id.equals(o.id)) : false;
     }
 
     @Override
@@ -185,12 +150,6 @@ public class Order implements Serializable {
         builder.append(orderTimestamp);
         builder.append(", notes=");
         builder.append(notes);
-        builder.append(", subtotal=");
-        builder.append(subtotal);
-        builder.append(", discount=");
-        builder.append(discount);
-        builder.append(", tax=");
-        builder.append(tax);
         builder.append(", total=");
         builder.append(total);
         builder.append("]");

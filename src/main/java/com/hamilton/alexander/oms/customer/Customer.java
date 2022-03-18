@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,16 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.hamilton.alexander.oms.address.Address;
 import com.hamilton.alexander.oms.employee.Employee;
@@ -34,36 +30,33 @@ import com.hamilton.alexander.oms.order.Order;
 @Table(name = "customers")
 public class Customer implements Serializable {
 
-    private static final long serialVersionUID = 8119949260334311924L;
+    private static final long serialVersionUID = 1383444899967644967L;
+
+    private static final String SEQ_ID = "seq_customer_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "pg-uuid")
-    @GenericGenerator( // @formatter:off
-            name = "pg-uuid", 
-            strategy = "uuid2",
-            parameters = @Parameter(
-                    name = "uuid_gen_strategy_class", 
-                    value = "com.vladmihalcea.book.hpjp.hibernate.identifier.uuid.PostgreSQLUUIDGenerationStrategy")) // @formatter:on
-    private UUID id;
+    @SequenceGenerator(name = SEQ_ID, sequenceName = SEQ_ID, initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQ_ID)
+    private Long id;
 
-    @NotBlank(message = "The first name field is required")
-    @Size(max = 30, message = "The first name cannot be more than 30 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 30, message = "{validation.size}")
     private String firstName;
 
-    @NotBlank(message = "The last name field is required")
-    @Size(max = 50, message = "The last name cannot be more than 50 characters")
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 50, message = "{validation.size}")
     private String lastName;
 
-    @NotBlank(message = "The email field is required")
-    @Size(max = 150, message = "The email cannot be more than 150 characters")
-    @Email
+    @NotBlank(message = "{validation.required}")
+    @Size(max = 150, message = "{validation.size}")
+    @Email(message = "{validation.email}")
     private String email;
 
-    @NotBlank(message = "The phone number field is required")
-    @Pattern(regexp = "(\\d{3}-){2}\\d{4}", message = "The phone number filed must be in the following format: ###-###-####")
+    @NotBlank(message = "{validation.required}")
+    @Pattern(regexp = "^(\\d{3}-){2}\\d{4}$", message = "{validation.phoneNumber}")
     private String phone;
 
-    @NotNull(message = "The employee field is required")
+    @NotNull(message = "{validation.required}")
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
@@ -73,12 +66,6 @@ public class Customer implements Serializable {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();
-
-    @Version
-    private short version;
-
-    public Customer() {
-    }
 
     public void addOrder(Order order) {
         order.setCustomer(this);
@@ -118,12 +105,8 @@ public class Customer implements Serializable {
         }
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -184,18 +167,16 @@ public class Customer implements Serializable {
 
     @Override
     public int hashCode() {
-        return 2021;
+        return getClass().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-
-        return id != null && id.equals(((Customer) obj).id);
+        return (obj instanceof Customer c) ? (id != null && id.equals(c.id)) : false;
     }
 
     @Override
