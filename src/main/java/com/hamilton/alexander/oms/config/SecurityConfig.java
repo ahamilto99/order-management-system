@@ -50,6 +50,8 @@ public class SecurityConfig {
                     .authenticationEntryPoint(authenticationEntryPoint())
                     .accessDeniedHandler(accessDeniedHandler())
             .and()
+                 .csrf()
+            .and()
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
         
         return http.build();
