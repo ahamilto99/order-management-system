@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.util.HtmlUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamilton.alexander.oms.config.exception.ErrorMessage;
@@ -69,7 +70,7 @@ public class SecurityConfig {
 
                 ObjectMapper objMapper = new ObjectMapper();
                 var responseBody = objMapper.writeValueAsString(new ErrorMessage(Instant.now().toString(), status.value(),
-                        status.getReasonPhrase(), "Valid bearer token required", request.getRequestURI()));
+                        status.getReasonPhrase(), "Valid bearer token required", HtmlUtils.htmlEscape(request.getRequestURI())));
 
                 response.getWriter().write(responseBody);
             }
@@ -87,7 +88,7 @@ public class SecurityConfig {
                 JwtAuthenticationToken jwt = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
                 if (jwt != null) {
                     LOG.warn("User '%s' attempted to access the protected URI: %s"
-                            .formatted(jwt.getToken().getClaimAsString("preferred_username"), request.getRequestURI()));
+                            .formatted(jwt.getToken().getClaimAsString("preferred_username"), HtmlUtils.htmlEscape(request.getRequestURI())));
                 }
 
                 HttpStatus status = HttpStatus.FORBIDDEN;
