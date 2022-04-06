@@ -88,7 +88,7 @@ public class SecurityConfig {
                 JwtAuthenticationToken jwt = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
                 if (jwt != null) {
                     LOG.warn("User '%s' attempted to access the protected URI: %s"
-                            .formatted(jwt.getToken().getClaimAsString("preferred_username"), HtmlUtils.htmlEscape(request.getRequestURI())));
+                            .formatted(jwt.getToken().getClaimAsString("preferred_username"), request.getRequestURI()));
                 }
 
                 HttpStatus status = HttpStatus.FORBIDDEN;
@@ -98,7 +98,7 @@ public class SecurityConfig {
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 var responseBody = objectMapper.writeValueAsString(new ErrorMessage(Instant.now().toString(), status.value(),
-                        status.getReasonPhrase(), "Insufficient privileges", request.getRequestURI()));
+                        status.getReasonPhrase(), "Insufficient privileges", HtmlUtils.htmlEscape(request.getRequestURI())));
 
                 response.getWriter().write(responseBody);
             };
