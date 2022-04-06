@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 
 import io.restassured.RestAssured;
@@ -17,9 +18,11 @@ public class BearerTokens {
     public static final String ASSOCIATE = //"Bearer ".concat("eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIzQTRvYlBwLWhtZFpqQXFSTEdDQlZkOVlxalE5T0tWRXY1aWVKYlZoRWpNIn0.eyJleHAiOjE2NDc1ODI3ODQsImlhdCI6MTY0NzU0Njc4NCwiYXV0aF90aW1lIjoxNjQ3NTQ2Nzg0LCJqdGkiOiI5MDVjMjM5Yy00YzQ5LTQ0MzEtOTVhZC0zOGVkYTNjNzJmYmEiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODEvYXV0aC9yZWFsbXMvb21zIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6ImQ3M2FmMGU3LWQyZTktNDc3YS05MDM1LTc4MmJmN2UxODYxOSIsInR5cCI6IkJlYXJlciIsImF6cCI6Im9tcy1yZXNvdXJjZS1zZXJ2ZXIiLCJzZXNzaW9uX3N0YXRlIjoiMDU4ZGMxN2EtZTFmMi00OTYyLWEyN2QtNWUxYjVkNzk5NDUyIiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLW9tcyIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJhc3NvY2lhdGUiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6ImVtYWlsIHByb2ZpbGUgYXNzb2NpYXRlIiwic2lkIjoiMDU4ZGMxN2EtZTFmMi00OTYyLWEyN2QtNWUxYjVkNzk5NDUyIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJDYXRoeSBDb2FkeSIsInByZWZlcnJlZF91c2VybmFtZSI6ImNhdGh5YyIsImdpdmVuX25hbWUiOiJDYXRoeSIsImZhbWlseV9uYW1lIjoiQ29hZHkiLCJlbWFpbCI6ImNhdGh5LmNvYWR5QG9tcy5jb20ifQ.V2yT1pzr_TayOGc5jLVvyhPRsE0Bkr5jXpphxUBlJJnH_mIBT0WVuiWyf56wg-8nJbaWmSsYRVTFAYS5g3HAIooehr6DtVi50gw5GVjRS2W-X3CeFSi7qxgY91JPYOGN_GrKQCEcShmZXlGvutW9xptJrDZCt_wbaBSLA9xRedcxxtnK3cv-7bdXLEmDRxG4fVc7kQOxDMhoQy7MlI-SjtJSAFpDJrh9f0S-h-hHW8mdEay7wm4unEYWVxYHQjzFpQXIguBuvFZ0ZvdLFCJIw70PHbpIrGNz7vuc8mMq8ePG2YMEqbkqCLlU1jT_hovhmx6pVp4wbr9fB4al8_u6Ug");
             "Bearer ".concat(obtainBearerToken("cathyc", "password"));
 
-    private static final String clientId = "oms-resource-server";
+    @Value("${ouath2.client-id}")
+    private static String clientId;
 
-    private static final String clientSecret = "8ab6c678-04cb-4d9c-afab-bf8cdec38911";
+    @Value("${ouath2.client-secret}")
+    private static String clientSecret;
 
     private static final String AUTH_SERVER_BASE_URL = "http://localhost:8081/auth/realms/oms";
 
